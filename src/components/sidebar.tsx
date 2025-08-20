@@ -18,9 +18,9 @@ const SideBarMain: React.FC<SideBarMainProps> = ({ children }) => {
     const currentPage = usePathname();
     const navigation = [
         { href: '/dashboard', icon: HomeIcon, current: false },
-        { href: '', icon: BuildingOffice2Icon, current: false },
-        { href: '/messages', icon: ChatBubbleLeftRightIcon, current: false, },
         { href: '/clients', icon: UserGroupIcon, current: false },
+        { href: '/messages', icon: ChatBubbleLeftRightIcon, current: false, },
+        { href: '', icon: BuildingOffice2Icon, current: false },
         { href: '/businessSettings', icon: BriefcaseIcon, current: false, },
     ]
 
