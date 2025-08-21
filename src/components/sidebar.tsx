@@ -1,76 +1,72 @@
-"use client"; //This is client component
-import React, { ReactNode } from 'react';
-//Next Import
-import { usePathname } from 'next/navigation';
-//Headless UI
-import { HomeIcon, BuildingOffice2Icon, ChatBubbleLeftRightIcon, UserGroupIcon, BriefcaseIcon } from "@heroicons/react/20/solid";
+"use client";
 
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
+import React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { NAV } from "@/config/nav";
+
+export default function Sidebar({ className = "" }: { className?: string }) {
+  const pathname = usePathname();
+  const isActive = (href: string) =>
+    pathname === href || pathname.startsWith(href + "/");
+
+  const asideRef = React.useRef<HTMLElement>(null);
+
+  return (
+    <aside
+      ref={asideRef}
+      aria-label="Primary"
+      className={[
+        "group sticky top-0 h-screen shrink-0 bg-[#1F2643] text-white",
+        "w-16 hover:w-56 transition-[width] duration-200 ease-in-out",
+        "min-w-0",
+        className,
+      ].join(" ")}
+      onMouseLeave={() => {
+        const el = document.activeElement as HTMLElement | null;
+        if (el && asideRef.current?.contains(el)) el.blur();
+      }}
+    >
+      <div className="flex h-full flex-col">
+        {/* Nav (scrollable) */}
+        <nav className="flex-1 overflow-y-auto px-2 py-2" role="navigation">
+          <ul className="space-y-1">
+            {NAV.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    title={item.name}
+                    onClick={(e) => {
+                      (e.currentTarget as HTMLAnchorElement).blur();
+                    }}
+                    className={[
+                      "flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                      "justify-center group-hover:justify-start",
+                      "gap-x-0 group-hover:gap-x-3",
+                      active
+                        ? "bg-[linear-gradient(135deg,#815cfa,#60d8e6)] text-white"
+                        : "text-white/80 hover:text-white hover:bg-black/40",
+                    ].join(" ")}
+                  >
+                    <item.icon
+                      className={[
+                        "h-5 w-5 shrink-0",
+                        active ? "text-white" : "text-white/70",
+                      ].join(" ")}
+                      aria-hidden="true"
+                    />
+                    <span className="hidden truncate group-hover:inline">
+                      {item.name}
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+      </div>
+    </aside>
+  );
 }
-
-interface SideBarMainProps {
-    children: ReactNode;
-}
-
-const SideBarMain: React.FC<SideBarMainProps> = ({ children }) => {
-
-    const currentPage = usePathname();
-    const navigation = [
-        { href: '/dashboard', icon: HomeIcon, current: false },
-        { href: '', icon: BuildingOffice2Icon, current: false },
-        { href: '/messages', icon: ChatBubbleLeftRightIcon, current: false, },
-        { href: '/clients', icon: UserGroupIcon, current: false },
-        { href: '/businessSettings', icon: BriefcaseIcon, current: false, },
-    ]
-
-    var nav = navigation.forEach((item) => {
-        item.current = (item.href === currentPage)
-    })
-
-    return (
-        <>
-            <div>
-                {/* Static sidebar for desktop - */}
-                <div className='flex flex-row h-screen p-4 bg-gray-300'>
-                    <div className="sticky lg:w-12 lg:flex-col">
-                        <div className="flex flex-col ">
-                            {/* Nav button */}
-                            <nav className="flex flex-1 flex-col px-2">
-                                <ul role="list" className="-mx-2 space-y-4">
-                                    {navigation.map((item, index) => (
-                                        <li key={index}>
-                                            <a
-                                                href={item.href}
-                                            >
-                                                <item.icon
-                                                    className={classNames(
-                                                        item.current ? 'text-dark' : 'text-gray-600',
-                                                        'h-8 w-8 shrink-0'
-                                                    )}
-                                                    aria-hidden="true"
-                                                />
-                                            </a>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-
-                    <div className='flex flex-col h-[100%] w-full'>
-                        {children &&
-                            <main className='h-[100%] bg-gray-100 rounded-md'>
-                                <div className="h-[100%]">
-                                    {children}
-                                </div>
-                            </main>
-                        }
-                    </div>
-                </div>
-            </div>
-        </>
-    )
-}
-
-export default SideBarMain;
