@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { KeyIcon, ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/20/solid";
-import handleApiCallFetch from "@/components/handleApiCallFetch";
+import { apiFetch } from "@/lib/api";
 import { LockClosedIcon, LockOpenIcon, Battery100Icon, Battery50Icon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import toast, { Toaster } from 'react-hot-toast';
-import { envConfig } from "@/utility/environment";
+import { getBackendUrl } from "@/lib/env";
 
 const DeviceDetails = (props: any) => {
 
-    const envconfig = envConfig;
+    const backendBaseUrl = getBackendUrl();
     // State to track the expansion of different sections
     const [showBookingAccessCodes, setShowBookingAccessCodes] = useState(true);
     const [showBackupAccessCodes, setShowBackupAccessCodes] = useState(true);
@@ -38,7 +38,7 @@ const DeviceDetails = (props: any) => {
     //get Device details
     const getDeviceDetails = async (deviceId: string) => {
         console.log("deviceId", deviceId)
-        const apiUrl = `${envconfig.backendUrl}/device/deviceDetail`;
+        const apiPath = `/device/deviceDetail`;
 
         let requestBody = {
             device_id: deviceId,
@@ -48,10 +48,10 @@ const DeviceDetails = (props: any) => {
             'Content-Type': 'application/json'
         };
 
-        var params = { method: 'POST', headers: headers, body: JSON.stringify(requestBody) }
+        var params = { method: 'POST' as const, headers: headers, body: JSON.stringify(requestBody) }
 
         try {
-            const response: any = await handleApiCallFetch(apiUrl, params);
+            const response: any = await apiFetch(apiPath, { ...params, baseUrl: backendBaseUrl });
             console.log("responsedeviceId", response);
             if (response && response.device) {
                 formattResponse(response.device);
@@ -106,11 +106,11 @@ const DeviceDetails = (props: any) => {
     const deviceLockHandler = async (data: any) => {
         console.log("hanles api loc", data)
 
-        let apiUrl = "";
+        let apiPath = "";
         if (data && data.lockedValue) {
-            apiUrl = `${envconfig.backendUrl}/device/unlock_door`;
+            apiPath = `/device/unlock_door`;
         } else {
-            apiUrl = `${envconfig.backendUrl}/device/lock_door`;
+            apiPath = `/device/lock_door`;
         }
 
         let requestBody = {
@@ -121,10 +121,10 @@ const DeviceDetails = (props: any) => {
             'Content-Type': 'application/json'
         };
 
-        var params = { method: 'POST', headers: headers, body: JSON.stringify(requestBody) }
+        var params = { method: 'POST' as const, headers: headers, body: JSON.stringify(requestBody) }
 
         try {
-            const response: any = await handleApiCallFetch(apiUrl, params);
+            const response: any = await apiFetch(apiPath, { ...params, baseUrl: backendBaseUrl });
             console.log("responsedeviceId", response);
             if (response && response.ok) {
                 toast.success(`Door ${data.lockedValue ? "unlocked" : "locked"} successfully`);

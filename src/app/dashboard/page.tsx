@@ -1,14 +1,9 @@
-"use client"; //This is client component
 //Component
-import SideBarMain from "@/components/sidebar";
+import MainDashboard from "./MainDashboard";
 
-const MainDashboard = () => {
+const page = () => {
     return (
-        <SideBarMain>
-            <div className="flex justify-center p-4">
-                <p>Dashboard screen</p>
-            </div>
-        </SideBarMain>
+        <MainDashboard />
     )
 }
-export default MainDashboard;
+export default page;

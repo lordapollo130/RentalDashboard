@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import handleApiCallFetch from "@/components/handleApiCallFetch";
-import { envConfig } from "@/utility/environment";
+import { apiFetch } from "@/lib/api";
+import { getBackendUrl } from "@/lib/env";
 
 const AddDevices = () => {
     const routre = useRouter();
-    const envconfig = envConfig;
+    const backendBaseUrl = getBackendUrl();
     const devices = [
         { id: 1, deviceName: 'Salto', imageSrc: 'https://www.shutterstock.com/shutterstock/photos/2079026965/display_1500/stock-photo-close-up-of-woman-using-intercom-at-building-entrance-2079026965.jpg', description: 'Connet lock via your Salto account' },
         { id: 2, deviceName: 'Yale', imageSrc: 'https://www.shutterstock.com/shutterstock/photos/2388454481/display_1500/stock-photo-door-lock-embodying-security-and-access-control-the-polished-metal-and-intricate-design-convey-a-2388454481.jpg', description: 'Connet lock via your Yale account' },
@@ -23,15 +23,14 @@ const AddDevices = () => {
     const handleItemClick = async (device: { id?: number; deviceName: any; imageSrc?: string; description?: string; }) => {
         // Handle the click event for the specific grid item (Schlage in this example)
         if (device && device.deviceName && device.deviceName == "Schlage") {
-            const url = `${envconfig.backendUrl}/device/connectWebview`;
             const params = {
-                method: "GET",
+                method: "GET" as const,
                 headers: {
                     "Content-Type": "application/json",
                 },
             }
             try {
-                const newData: any = await handleApiCallFetch(url, params);
+                const newData: any = await apiFetch("/device/connectWebview", { ...params, baseUrl: backendBaseUrl });
                 console.log("response", newData);
                 if (newData && newData.url) {
                     routre.push(newData?.url);

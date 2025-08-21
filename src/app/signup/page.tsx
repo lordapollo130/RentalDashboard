@@ -1,4 +1,3 @@
-"use client"; //This is client component 
 //Component
 import Signup from "./signup";
 

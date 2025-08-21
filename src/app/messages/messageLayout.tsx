@@ -6,11 +6,6 @@ import UserInfo from "./userInfo";
 const MessageLayout = () => {
 
     const [selectedData, setSelectedData] = useState();
-  console.log(selectedData, "selectedData");
-
-   
-
-  
 
     return (
         <div className="flex flex-col justify-center p-4 h-[100%] rounded-md">

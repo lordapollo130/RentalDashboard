@@ -1,29 +1,26 @@
-import React, { ReactNode } from 'react';
-import { Inter } from 'next/font/google';
-import '../styles/globals.css';
+import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
+import "@/styles/globals.css";
+import AppShell from "@/components/app-shell";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-inter" });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Lock App',
-}
+};
 
-// do not cache this layout
+export const viewport: Viewport = { themeColor: "#ffffff" };
 export const revalidate = 0;
-interface RootLayoutProps {
-  children: ReactNode;
-}
 
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={inter.variable}>
       <head>
-        <link rel="icon" href="/assets/images/icon.png" type="image" sizes="any" />
+        <link rel="icon" href="/assets/loginlogo.jpg" type="image/jpeg" sizes="any" />
       </head>
-      <body className={inter.className}>
-        {children}
+      <body className="min-h-screen bg-[#F6F7F9] text-gray-900">
+        <AppShell>{children}</AppShell>
       </body>
     </html>
-  )
+  );
 }
-export default RootLayout;

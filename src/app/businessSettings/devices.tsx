@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { LockClosedIcon, LockOpenIcon, Battery100Icon, Battery50Icon, CheckCircleIcon, XCircleIcon } from "@heroicons/react/20/solid";
 import DeviceDetails from "./deviceDetails";
 import CommonPopup from "@/components/commonPopup";
-import handleApiCallFetch from "@/components/handleApiCallFetch";
-import { envConfig } from '../../utility/environment';
+import { apiFetch } from "@/lib/api";
+import { getBackendUrl } from "@/lib/env";
 
 const Devices = () => {
-    const envconfig = envConfig;
     const router = useRouter();
     // Dummy data for illustration
     const deviceData = [
@@ -40,15 +39,14 @@ const Devices = () => {
 
     //get All connected Devices List
     const getAllDevicesList = async () => {
-        const url = `${envconfig.backendUrl}/device/deviceList`;
         const params = {
-            method: "GET",
+            method: "GET" as const,
             headers: {
                 "Content-Type": "application/json",
             },
-        }
+        };
         try {
-            const response: any = await handleApiCallFetch(url, params);
+            const response: any = await apiFetch("/device/deviceList", { ...params, baseUrl: getBackendUrl() });
             console.log("response", response);
             const formattData = await formattResponse(response);
             setDeviceList(formattData);
