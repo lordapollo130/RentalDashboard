@@ -2,10 +2,10 @@
 import ClientsDashboard from "./ClientDashboard";
 
 const ClientsPage = () => {
-    return (
-      <>
-        <ClientsDashboard />
-      </>
-    )
-}
+  return (
+    <>
+      <ClientsDashboard />
+    </>
+  );
+};
 export default ClientsPage;
